@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - 'master'
+  schedule:
+    - cron: '0 */3 * * *'
 
 jobs:
   build:
@@ -34,7 +36,7 @@ jobs:
 
       - name: Build images
         run: |
-          wget https://downloads.immortalwrt.org/snapshots/targets/${{ matrix.vendor }}/${{ matrix.arch }}/immortalwrt-imagebuilder-${{ matrix.vendor }}-${{ matrix.arch }}.Linux-x86_64.tar.xz -O ib.tar.xz
+          wget -q https://downloads.immortalwrt.org/snapshots/targets/${{ matrix.vendor }}/${{ matrix.arch }}/immortalwrt-imagebuilder-${{ matrix.vendor }}-${{ matrix.arch }}.Linux-x86_64.tar.xz -O ib.tar.xz
           mkdir ib
           tar xf ib.tar.xz --strip-components=1 -C ib
           cp -a ${{matrix.conf_dir}}/files ib/
