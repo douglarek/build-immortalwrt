@@ -41,7 +41,9 @@ jobs:
 
       - name: Build images
         run: |
-          env
+          echo ${{ env.PROFILE }}
+          echo ${{ env.PACKAGES }}
+          echo ${{ env.FILES }}
           wget -q https://downloads.immortalwrt.org/snapshots/targets/${{ matrix.vendor }}/${{ matrix.arch }}/immortalwrt-imagebuilder-${{ matrix.vendor }}-${{ matrix.arch }}.Linux-x86_64.tar.xz -O ib.tar.xz
           mkdir ib
           tar xf ib.tar.xz --strip-components=1 -C ib
