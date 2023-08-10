@@ -9,11 +9,13 @@ on:
 
 jobs:
   build:
-    name: Build ${{ matrix.target }}
+    name: Build ${{ matrix.target }}-${{ matrix.version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        version: [snapshots, 23.05-SNAPSHOT]
+        target: [xiaomi_ax3600, xiaomi_ax3600-stock, friendlyarm_nanopi-r5c]
         include:
           - target: xiaomi_ax3600
             vendor: qualcommax
@@ -44,7 +46,19 @@ jobs:
           echo ${{ env.PROFILE }}
           echo ${{ env.PACKAGES }}
           echo ${{ env.FILES }}
-          wget -q https://downloads.immortalwrt.org/snapshots/targets/${{ matrix.vendor }}/${{ matrix.arch }}/immortalwrt-imagebuilder-${{ matrix.vendor }}-${{ matrix.arch }}.Linux-x86_64.tar.xz -O ib.tar.xz
+          sf=""
+          pf=${{ matrix.vendor }}-${{ matrix.arch }}
+          vendor=${{ matrix.vendor }}
+          arch=${{ matrix.arch }}
+          if [ ${{ matrix.version }} != "snapshots" ]; then
+            if [ "${vendor}" == "qualcommax" ]; then
+              vendor="ipq807x"
+              arch="generic"
+            fi
+            pf=${{ matrix.version }}-${vendor}-${arch}
+            sf="releases/${sf}"
+          fi
+          wget https://downloads.immortalwrt.org/${sf}${{ matrix.version }}/targets/${vendor}/${arch}/immortalwrt-imagebuilder-${pf}.Linux-x86_64.tar.xz -O ib.tar.xz
           mkdir ib
           tar xf ib.tar.xz --strip-components=1 -C ib
           cp -a ${{matrix.conf_dir}}/files ib/
@@ -55,6 +69,6 @@ jobs:
       - name: Publishing to GitHub Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.target }}
+          name: ${{ matrix.target }}-${{ matrix.version }}
           path: |
             ib/bin/targets/*/*/*
