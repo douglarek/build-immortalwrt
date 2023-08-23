@@ -2,3 +2,13 @@ uci -q batch << EOF
 set dhcp.@dnsmasq[0].rebind_protection="0"
 commit dhcp
 EOF
+
+uci -q batch << EOF
+set dhcp.@dnsmasq[0].dns_redirect='0'
+delete dhcp.lan.dns
+delete dhcp.lan.dhcp_option
+add_list dhcp.lan.dns='2400:3200::1'
+add_list dhcp.lan.dhcp_option='6,223.5.5.5'
+EOF
+uci commit dhcp
+/etc/init.d/dnsmasq restart
