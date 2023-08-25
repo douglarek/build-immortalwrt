@@ -12,14 +12,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [snapshots, 23.05-SNAPSHOT]
-        target: [x86_64, xiaomi_ax3600, xiaomi_ax3600-stock, friendlyarm_nanopi-r5c]
+        version: [snapshots]
+        target: [xiaomi_ax3600, xiaomi_ax3600-stock, friendlyarm_nanopi-r5c]
         include:
-          - target: x86_64
-            vendor: x86
-            arch: 64
-            env_file: x86_64.env
-            conf_dir: x86
           - target: xiaomi_ax3600
             vendor: qualcommax
             arch: ipq807x
