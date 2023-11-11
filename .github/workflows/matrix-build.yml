@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [snapshots]
+        version: [23.05.0-rc4]
         target: [xiaomi_ax3600, xiaomi_ax3600-stock, friendlyarm_nanopi-r5c]
         include:
           - target: xiaomi_ax3600
