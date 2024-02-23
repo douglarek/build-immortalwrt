@@ -3,7 +3,7 @@ name: Build Immortalwrt
 on:
   push:
     branches:
-      - 'master'
+      - 'snapshot'
   schedule:
   - cron: '0 */12 * * *'
 
@@ -14,19 +14,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [23.05.1]
-        target: [xiaomi_ax3600, xiaomi_ax3600-stock, friendlyarm_nanopi-r5c]
+        version: [snapshots]
+        target: [friendlyarm_nanopi-r5c]
         include:
-          - target: xiaomi_ax3600
-            vendor: qualcommax
-            arch: ipq807x
-            env_file: ax3600.env
-            conf_dir: qualcommax
-          - target: xiaomi_ax3600-stock
-            vendor: qualcommax
-            arch: ipq807x
-            env_file: ax3600-stock.env
-            conf_dir: qualcommax
           - target: friendlyarm_nanopi-r5c
             vendor: rockchip
             arch: armv8
@@ -55,14 +45,6 @@ jobs:
           pf=${{ matrix.vendor }}-${{ matrix.arch }}
           vendor=${{ matrix.vendor }}
           arch=${{ matrix.arch }}
-          if [ ${{ matrix.version }} != "snapshots" ]; then
-            if [ "${vendor}" == "qualcommax" ]; then
-              vendor="ipq807x"
-              arch="generic"
-            fi
-            pf=${{ matrix.version }}-${vendor}-${arch}
-            sf="releases/${sf}"
-          fi
           wget https://downloads.immortalwrt.org/${sf}${{ matrix.version }}/targets/${vendor}/${arch}/immortalwrt-imagebuilder-${pf}.Linux-x86_64.tar.xz -O ib.tar.xz
           mkdir ib
           tar xf ib.tar.xz --strip-components=1 -C ib
